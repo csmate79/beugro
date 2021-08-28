@@ -1,0 +1,11 @@
+<custom-table [tableData]="storages"
+              [tableColumns]="storagesTableColumn"
+              [isFilterable]="true"
+              [isPageable]="true"
+              [menuBtn]="'menuBtn'"
+              [paginationSizes]="[5,10,15]"
+              (addRowAction)="addRowDialog()"
+              (clickMenuAction)="onClickMenu($event)"
+              (editRowAction)="openEditDialog($event)"
+              (deleteRowAction)="openDeleteDialog($event)">
+</custom-table>

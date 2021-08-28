@@ -1,0 +1,75 @@
+<div id="table">
+    <ng-container>
+        <!-- Filter -->
+        <ng-container 
+            *ngIf="isFilterable" 
+            [matColumnDef]="this.menuBtn">
+            <button 
+                *hasPermission="['ADMIN', 'SUPERADMIN']; op 'OR'" 
+                id="add-button" 
+                mat-raised-button 
+                (click)="emitAddRow()" 
+                class="demo-button">
+                Hozzáadás
+            </button>
+            <mat-form-field>
+                <mat-label>Filter</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="filter">
+            </mat-form-field>
+        </ng-container>
+  
+        <!-- Table -->
+        <table 
+            mat-table 
+            [dataSource]="tableDataSource">
+    
+        <ng-container *ngFor="let tableColumn of tableColumns" [matColumnDef]="tableColumn.name">
+
+            <ng-container>
+            <th 
+                mat-header-cell 
+                *matHeaderCellDef>
+                {{tableColumn.name}}
+            </th>
+            </ng-container>
+    
+            <!-- column data -->
+            <td mat-cell *matCellDef="let element" [class.text-right]="tableColumn.position == 'right'">
+            {{element | dataPropertyGetter: tableColumn.dataKey}}
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <!-- menu column -->
+            <ng-container [matColumnDef]="menuBtn">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" [id]="menuBtn">
+                    <button 
+                        mat-raised-button
+                        *hasPermission="['ADMIN', 'SUPERADMIN']; op 'OR'"
+                        color="primary" 
+                        [matMenuTriggerFor]="menu"
+                        (click)="emitClickMenu(element)">Menü</button>
+                        <mat-menu 
+                            #menu="matMenu">
+                            <button 
+                                mat-menu-item
+                                (click)="emitEditRow(element)">Szerkesztés</button>
+                            <button 
+                                mat-menu-item
+                                (click)="emitDeleteRow(element)">Törlés</button>
+                        </mat-menu>
+                </td>
+            </ng-container>
+        </table>
+  
+        <!-- Pagination -->
+        <mat-paginator 
+                    *ngIf="isPageable"
+                    [pageSizeOptions]="paginationSizes"
+                    [pageSize]="defaultPageSize"
+                    showFirstLastButtons>
+        </mat-paginator>
+    </ng-container>
+</div>

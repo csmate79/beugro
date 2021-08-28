@@ -1,0 +1,39 @@
+<p>
+    <mat-toolbar color="primary">
+      <span>Beugró</span>
+      <span class="example-spacer"></span>
+      <a 
+            mat-button
+            routerLink="/objects" 
+            [style.margin-right]="'12px'"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact: true}">
+                Tárgyak
+        </a>
+        <a 
+            mat-button
+            routerLink="/storages" 
+            routerLinkActive="active">
+                Raktárak
+        </a>
+        <span class="example-spacer"></span>
+        <button
+            *ngIf="user === null"
+            routerLink="/login" 
+            mat-raised-button 
+            color="primary">Bejelentkezés</button>
+        <button
+            *ngIf="user !== null"
+            mat-raised-button
+            [matMenuTriggerFor]="menu"
+            color="primary"
+            style="background-color: darkorchid; padding: 0 15px; border-radius: 5px;">
+            {{ userName | async }}
+        </button>
+            <mat-menu #menu="matMenu">
+                <button 
+                    mat-menu-item
+                    (click)="logOutUser()">Kijelentkezés</button>
+            </mat-menu>
+    </mat-toolbar>
+  </p>

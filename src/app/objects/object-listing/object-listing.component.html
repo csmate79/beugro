@@ -1,0 +1,12 @@
+  <custom-table 
+    [tableData]="objects"
+    [tableColumns]="objectsTableColumn"
+    [isFilterable]="true"
+    [isPageable]="true"
+    [menuBtn]="'menuBtn'"
+    (clickMenuAction)="onClickMenu($event)"
+    (addRowAction)="addRowDialog()"
+    (editRowAction)="openEditDialog($event)"
+    (deleteRowAction)="openDeleteDialog($event)">
+    [paginationSizes]="[5,10,15]">
+  </custom-table>

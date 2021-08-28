@@ -1,0 +1,10 @@
+.active {
+    background-color: darkorchid;
+}
+.example-spacer {
+    flex: 1 1 auto;
+}
+a:hover {
+    text-decoration: none;
+    color: white;
+}

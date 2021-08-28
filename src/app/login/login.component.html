@@ -1,0 +1,40 @@
+<div fxLayout="column" fxLayoutAlign="center center" class="form">
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="example-form">
+        <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Email:</mat-label>
+            <input
+                matInput  
+                type="email" 
+                name="email" 
+                id="email"
+                placeholder="Email"
+                formControlName="email"
+                [errorStateMatcher]="matcher">
+            <mat-error *ngIf="loginForm.controls.email.hasError('email') && !loginForm.controls.email.hasError('required')">
+                Helytelen email!
+            </mat-error>
+            <mat-error *ngIf="loginForm.controls.email.hasError('required')">
+                <strong>Hiányzó</strong> email cím!
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Jelszó:</mat-label>
+            <input
+                matInput  
+                type="password" 
+                name="password" 
+                id="password"
+                placeholder="Jelszó"
+                formControlName="password"
+                [errorStateMatcher]="matcher">
+            <mat-error *ngIf="loginForm.controls.password.hasError('required')">
+                <strong>Hiányzó</strong> jelszó!
+            </mat-error>
+        </mat-form-field>
+        <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit"
+            [disabled]="!loginForm.valid">Belépés</button>
+    </form>
+</div>

@@ -1,0 +1,44 @@
+<form 
+    [formGroup]="updatedForm" 
+    class="example-form">
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Tárgy neve:</mat-label>
+        <input 
+            id="name" 
+            type="text"
+            placeholder="Tárgy neve"
+            formControlName="name"
+            matInput >
+    </mat-form-field>
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Tárgy hossza:</mat-label>
+        <input 
+            id="length" 
+            type="text"
+            placeholder="Tárgy hossza"
+            formControlName="length"
+            matInput >
+    </mat-form-field>
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Létrehozás dátuma:</mat-label>
+        <input 
+            id="date" 
+            type="text"
+            placeholder="Létrehozás dátuma"
+            formControlName="date"
+            matInput >
+    </mat-form-field>
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+        <button 
+            mat-stroked-button 
+            color="primary" 
+            type="submit"
+            [disabled]="!updatedForm.valid"
+            [mat-dialog-close]="updatedForm.getRawValue()">Mentés</button>
+        <button 
+            mat-stroked-button 
+            color="primary" 
+            type="submit"
+            (click)="onNoClick()">Mégse</button>
+    </div>
+</form>

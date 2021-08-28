@@ -1,0 +1,50 @@
+<form [formGroup]="updatedForm">
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Id:</mat-label>
+        <input 
+            id="id" 
+            type="text"
+            formControlName="id"
+            matInput >
+    </mat-form-field>
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Cím:</mat-label>
+        <input 
+            id="address" 
+            type="text"
+            placeholder="Cím"
+            formControlName="address"
+            matInput >
+    </mat-form-field>
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Hosszúság:</mat-label>
+        <input 
+            id="length" 
+            type="text"
+            placeholder="Hosszúság"
+            formControlName="length"
+            matInput >
+    </mat-form-field>
+    <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Szélesség:</mat-label>
+        <input 
+            id="width" 
+            type="text"
+            placeholder="Szélesség"
+            formControlName="width"
+            matInput >
+    </mat-form-field>
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+        <button 
+            mat-stroked-button 
+            color="primary" 
+            type="submit"
+            [disabled]="!updatedForm.valid"
+            [mat-dialog-close]="updatedForm.getRawValue()">Mentés</button>
+        <button 
+            mat-stroked-button 
+            color="primary" 
+            type="submit"
+            (click)="onNoClick()">Mégse</button>
+    </div>
+</form>

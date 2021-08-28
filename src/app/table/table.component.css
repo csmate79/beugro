@@ -1,0 +1,28 @@
+table {
+    width: 100%;
+}
+  
+th, td {
+    padding: 10px !important;
+}
+  
+mat-form-field {
+    width: 40%;
+}
+  
+.text-right {
+    text-align: right !important;
+}
+
+#add-button {
+    margin-right: 2em;
+}
+
+#table {
+    width: 60vw;
+    min-width: 350px;
+    margin: 3em auto 3em auto;
+    padding: 5px 15px;
+    box-shadow: 0 0 15px;
+    border-radius: 5px;
+}

@@ -1,0 +1,10 @@
+<div 
+    fxLayout="row" 
+    fxLayoutAlign="center">
+    <div 
+        id="rectangle" 
+        fxLayoutAlign="center center"
+        [ngStyle]="{'background-color': (storagesLength >= objectsLength) ? 'green' : 'darkred'}">
+            {{ storagesLength >= objectsLength ? 'BEFÉR' : 'NEM FÉR' }}
+    </div>
+</div>

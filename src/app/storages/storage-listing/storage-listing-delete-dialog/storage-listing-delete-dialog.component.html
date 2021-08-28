@@ -1,0 +1,15 @@
+<div>
+    <div>
+        <h5>Biztosan törölni akarja a <em>{{ storageService.selectedStorageAddress }}</em> nevű elemet?</h5>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+        <button 
+            mat-stroked-button 
+            color="primary"
+            [mat-dialog-close]="true">Igen</button>
+        <button 
+            mat-stroked-button 
+            color="primary"
+            (click)="onNoClick()">Nem</button>
+    </div>
+</div>
