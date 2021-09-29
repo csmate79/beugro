@@ -9,16 +9,16 @@ Run `npm install` and `ng serve` for a dev server. Navigate to `http://localhost
 ## How can you Login into the application
 
  **admin** | **superadmin** | **user**:
-`email:` asd@asd.com
-`password:` a
+`email: asd@asd.com`
+`password: a`
 
  **user**:
-`email:` b@b.com
-`password:` b
+`email: b@b.com `
+`password: b `
 
  **superadmin**:
-`email:` c@c.com
-`password:` c
+`email: c@c.com`
+`password: c`
 
 
 ## Code scaffolding
