@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
@@ -8,6 +8,7 @@ import { ObjectsService } from '../objects.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TableColumn } from 'src/app/table/tableColumn';
 import { Subject, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 
 @Component({
@@ -15,18 +16,18 @@ import { Subject, Subscription } from 'rxjs';
   templateUrl: './object-listing.component.html',
   styleUrls: ['./object-listing.component.css']
 })
-export class ObjectListingComponent implements AfterViewInit, OnInit {
+export class ObjectListingComponent implements OnInit {
   displayedColumns: string[] = ['name', 'length', 'date', 'gomb'];
-  data = Object.assign( this.objectService.data );
-  dataSource = new MatTableDataSource<Object>(this.data);
-  updatedForm!: FormGroup;
-  userName!: string | never[];
-  loginStatus!: string | null;
 
   objectsTableColumn!: TableColumn[];
 
   objects!: Object[];
+  dataSource!: MatTableDataSource<Object>;
   private objectChangeSub!: Subscription;
+
+  updatedForm!: FormGroup;
+  userName!: string | never[];
+  loginStatus!: string | null;
 
   storagesChanged = new Subject<Storage[]>();
 
@@ -42,17 +43,19 @@ export class ObjectListingComponent implements AfterViewInit, OnInit {
     this.initializeColumns();
     this.initForm();
     
-    this.objects = this.objectService.getObject();
+    this.objectService.getStoragesApi().pipe(
+      tap((objects: Object[]) => {
+        this.objects = objects;
+        this.dataSource = new MatTableDataSource(this.objects);
+      })
+    ).subscribe();
+
     this.objectChangeSub = this.objectService.objectChanged
       .subscribe(
         (objects: Object[]) => {
           this.objects = objects;
         }
       );
-  }
-
-  ngAfterViewInit() {
-    setTimeout(() => this.dataSource.paginator = this.paginator);
   }
 
   initializeColumns(): void {

@@ -9,6 +9,7 @@ import { StorageService } from '../storage.service';
 import { TableColumn } from 'src/app/table/tableColumn';
 import { Storage } from '../storage.interface';
 import { Subject, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-storage-listing',
@@ -20,9 +21,8 @@ export class StorageListingComponent implements OnInit {
   displayedColumns: string[] = [ 'address', 'length', 'width', 'gomb'];
   
   storages!: Storage[];
+  dataSource!: MatTableDataSource<Storage>;
   private storageChangeSub!: Subscription;
-
-  storagesChanged = new Subject<Storage[]>();
 
   updatedForm!: FormGroup;
   userName!: string | never[];
@@ -43,7 +43,13 @@ export class StorageListingComponent implements OnInit {
     this.initializeColumns();
     this.initForm();
   
-    this.storages = this.storageService.getStorages();
+    this.storageService.getStoragesApi().pipe(
+      tap((storages: Storage[]) => {
+        this.storages = storages;
+        this.dataSource = new MatTableDataSource(this.storages);
+      })
+    ).subscribe();
+
     this.storageChangeSub = this.storageService.storagesChanged
       .subscribe(
         (storages: Storage[]) => {
@@ -52,7 +58,7 @@ export class StorageListingComponent implements OnInit {
       );
   }
 
-  onClickMenu(element: object | any) {
+  public onClickMenu(element: object | any) {
     this.storageService.selectedStorageAddress = element.address;
     this.updatedForm.setValue({
       'id': element.id,
@@ -62,17 +68,17 @@ export class StorageListingComponent implements OnInit {
     })
   }
 
-  addRowDialog() {
+  public addRowDialog() {
     this.storageService.openDialogCreateNewStorage();
     this.initForm();
   }
 
-  openEditDialog(element: Element) {
+  public openEditDialog(element: Element) {
     this.storageService.openDialogEdit(element, this.updatedForm);
     this.initForm();
   }
 
-  openDeleteDialog(element: Element) {
+  public openDeleteDialog(element: Element) {
     this.storageService.openDialogDelete(element);
   }
 
@@ -85,11 +91,7 @@ export class StorageListingComponent implements OnInit {
     });
   }
 
-  getStorages(): MatTableDataSource<Storage> {
-    return this.storageService.dataSource;
-  }
-
-  initializeColumns(): void {
+  public initializeColumns(): void {
     this.storagesTableColumn = [
       {
         name: 'Cím',

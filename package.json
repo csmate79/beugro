@@ -25,6 +25,7 @@
     "@ngx-pwa/local-storage": "^12.1.0",
     "@syncfusion/ej2-angular-navigations": "^19.2.48",
     "bootstrap": "^4.6.0",
+    "json-server": "^0.16.3",
     "ngx-webstorage-service": "^4.1.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",

@@ -1,24 +1,27 @@
 import { Injectable, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
 import { Storage } from '../storages/storage.interface';
 import { StorageListingEditDialogComponent } from 'src/app/storages/storage-listing/storage-listing-edit-dialog/storage-listing-edit-dialog.component';
 import { StorageListingDeleteDialogComponent } from 'src/app/storages/storage-listing/storage-listing-delete-dialog/storage-listing-delete-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { StorageAddDialogComponent } from 'src/app/storages/storage-listing/storage-listing-add-dialog/storage-listing-add-dialog.component';
 import { ObjectsService } from '../objects/objects.service';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedService } from '../shared/shared.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { first, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService implements OnInit {
-  data = ELEMENT_DATA;
-  dataSource: MatTableDataSource<Storage> = new MatTableDataSource<Storage>(this.data);
+  private apiBaseUrl = environment.apiBaseUrl;
+  
+  data!: Storage[];
  
   objectsLength!: number;
   private storagesLength = new BehaviorSubject<number>(this.getStoragesLength());
@@ -44,17 +47,22 @@ export class StorageService implements OnInit {
     private sharedService: SharedService,
     private objectsService: ObjectsService,
     private formBuilder: FormBuilder,
+    private http: HttpClient
   ) { }
 
   ngOnInit() {
     this.objectsService.currentObjectLength.subscribe(length => this.objectsLength = length);
   }
 
-  getStorages() {
-    return this.dataSource.data.slice();
+  public getStoragesApi(): Observable<Storage[]> {
+    return this.http.get<Storage[]>(`${this.apiBaseUrl}/storages`).pipe(
+      tap((response: any[]) => {
+        this.storagesChanged.next([...response])
+      }),
+    );
   }
 
-  openDialogCreateNewStorage() {
+  public openDialogCreateNewStorage() {
     this.initCreatingForm();
     const dialogRef = this.dialog.open(StorageAddDialogComponent, {
       width: '40vw',
@@ -65,10 +73,16 @@ export class StorageService implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+
       if (result) {
         this.createdStorage = result;
-        this.data.push(this.createdStorage);
-        this.storagesChanged.next(this.data.slice());
+
+        this.http.post(`${this.apiBaseUrl}/storages`, this.createdStorage).pipe(
+          first(),
+          tap(() => {
+            this.getStoragesApi().subscribe();
+          }),
+        ).subscribe();
 
         this.storagesLength.next(this.getStoragesLength());
         this.creatingForm.reset();
@@ -77,7 +91,7 @@ export class StorageService implements OnInit {
     });
   }
 
-  openDialogEdit(element: Element, updatedForm: FormGroup) {
+  public openDialogEdit(element: Element, updatedForm: FormGroup) {
     const dialogRef = this.dialog.open(StorageListingEditDialogComponent, {
       width: '40vw',
       data: { 
@@ -89,21 +103,20 @@ export class StorageService implements OnInit {
       console.log('The dialog was closed');
       
       if (result) {
-        for (let i = 0; i < this.data.length; i++) {
-          if (this.data[i].id === element.id) {
-            this.data[i] = result;
-            this.storagesLength.next(this.getStoragesLength());
-          }
-        }
-
-        this.storagesChanged.next(this.data.slice());
+        this.http.put(`${this.apiBaseUrl}/storages/${element.id}`, updatedForm.getRawValue()).pipe(
+          first(),
+          tap(() => {
+            this.getStoragesApi().subscribe();
+          }),
+        ).subscribe();
         this.sharedService.openSnackBar('edit');
       }
       updatedForm.reset();
     });
   }
 
-  openDialogDelete(element: Element) {
+  public openDialogDelete(element: Element) {
+    console.log(element);
     const dialogRef = this.dialog.open(StorageListingDeleteDialogComponent, {
       width: '40vw',
       data: { }
@@ -111,24 +124,27 @@ export class StorageService implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+      
       if (result) {
-        this.data = this.data.filter(storage => storage.id !== element.id);
-        this.storagesChanged.next(this.data.slice());
-        this.storagesLength.next(this.getStoragesLength());
-        this.sharedService.openSnackBar('delete');
+        this.http.delete(`${this.apiBaseUrl}/storages/${element.id}`).pipe(
+          first(),
+          tap(() => {
+            this.getStoragesApi().subscribe();
+          }),
+        ).subscribe();
       }
     });
   }
 
-  getStoragesLength() {
+  public getStoragesLength() {
     let length = 0
-    for (let i = 0; i < this.data.length; i++) {
+    for (let i = 0; i < this.data?.length; i++) {
       length += parseInt(this.data[i].length);
     };
     return length;
   }
 
-  initCreatingForm() {
+  public initCreatingForm() {
     this.creatingForm = this.formBuilder.group({
       id: {value: makeid(), disabled: true},
       address: [null, [Validators.required, Validators.maxLength(50)]],
@@ -148,17 +164,17 @@ function makeid() {
   return text;
 }
 
-const ELEMENT_DATA: Storage[] = [
-  {id: makeid(), address: 'Sas', length: '2', width: '4'},
-  {id: makeid(), address: 'Galamb', length: '3', width: '3'},
-  {id: makeid(), address: 'Makaróni', length: '5', width: '2'},
-  {id: makeid(), address: 'Utca', length: '2', width: '1'},
-  {id: makeid(), address: 'Qwerty', length: '1', width: '3'},
-  {id: makeid(), address: 'Humbák', length: '5', width: '4'},
-  {id: makeid(), address: 'Huszár', length: '3', width: '2'},
-  {id: makeid(), address: 'Huszár', length: '2', width: '5'},
-  {id: makeid(), address: 'Huszár', length: '2', width: '1'},
-  {id: makeid(), address: 'Huszár', length: '1', width: '2'},
-  {id: makeid(), address: 'Huszár', length: '4', width: '5'},
+// const ELEMENT_DATA: Storage[] = [
+//   {id: makeid(), address: 'Sas', length: '2', width: '4'},
+//   {id: makeid(), address: 'Galamb', length: '3', width: '3'},
+//   {id: makeid(), address: 'Makaróni', length: '5', width: '2'},
+//   {id: makeid(), address: 'Utca', length: '2', width: '1'},
+//   {id: makeid(), address: 'Qwerty', length: '1', width: '3'},
+//   {id: makeid(), address: 'Humbák', length: '5', width: '4'},
+//   {id: makeid(), address: 'Huszár', length: '3', width: '2'},
+//   {id: makeid(), address: 'Huszár', length: '2', width: '5'},
+//   {id: makeid(), address: 'Huszár', length: '2', width: '1'},
+//   {id: makeid(), address: 'Huszár', length: '1', width: '2'},
+//   {id: makeid(), address: 'Huszár', length: '4', width: '5'},
 
-];
+// ];

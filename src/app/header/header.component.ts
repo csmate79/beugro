@@ -24,8 +24,6 @@ export class HeaderComponent implements OnInit {
     ).subscribe();
 
     this.userName = this.authService.getUsername();
-    console.log(this.authService.getUsername());
-    
   }
 
   logOutUser() {
