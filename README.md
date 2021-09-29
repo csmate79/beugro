@@ -13,10 +13,10 @@ Run `npm install` and `ng serve` for a dev server. Navigate to `http://localhost
 `password: a`
 
  **user**:\
-`email: b@b.com`\  
+`email: b@b.com`\
 `password: b `
 
- **superadmin**:\ 
+ **superadmin**:\
 `email: c@c.com`\
 `password: c`
 
