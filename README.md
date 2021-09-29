@@ -16,7 +16,7 @@ Run `npm install` and `ng serve` for a dev server. Navigate to `http://localhost
 `email:` b@b.com
 `password:` b
 
- superadmin_
+ superadmin:
 `email:` c@c.com
 `password:` c
 
