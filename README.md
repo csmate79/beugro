@@ -8,7 +8,7 @@ Run `npm install` and `ng serve` for a dev server. Navigate to `http://localhost
 
 ## How can you Login into the application
 
-With admin|superadmin|user:
+ admin || superadmin || user:
 `email:` admin@admin.com
 `password:` a
 
