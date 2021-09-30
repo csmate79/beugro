@@ -1,6 +1,8 @@
+import { tap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { ObjectsService } from 'src/app/objects/objects.service';
 import { StorageService } from '../storage.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-storage-rectangle',
@@ -8,8 +10,8 @@ import { StorageService } from '../storage.service';
   styleUrls: ['./storage-rectangle.component.css']
 })
 export class StorageRectangleComponent implements OnInit {
-  objectsLength!: number;
-  storagesLength!: number;
+  objectsLength: any;
+  storagesLength: any;
 
   constructor (
     private storageService: StorageService,
@@ -17,8 +19,17 @@ export class StorageRectangleComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.storageService.currentStoragesLength.subscribe(length => this.storagesLength = length);
-    this.objectsService.currentObjectLength.subscribe(length => this.objectsLength = length);
+    this.objectsService.getObjectsLength().pipe(
+      tap(length => {
+        this.objectsLength = length;
+      }),
+    ).subscribe();
+
+    this.storageService.getStoragesLength().pipe(
+      tap(length => {
+        this.storagesLength = length;
+      })
+    ).subscribe();
   }
 
   fitInColor() {

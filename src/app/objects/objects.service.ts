@@ -12,22 +12,21 @@ import { ObjectAddDialogComponent } from './object-listing/object-listing-add-di
 import { ObjectListingDeleteDialogComponent } from './object-listing/object-listing-delete-dialog/object-listing-delete-dialog.component';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { first, tap } from 'rxjs/operators';
+import { first, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ObjectsService implements OnInit {
+export class ObjectsService implements OnInit{
   public apiBaseUrl = environment.apiBaseUrl;
 
   creatingForm!: FormGroup;
 
-  private objectsLength = new BehaviorSubject<number>(this.getObjectsLength());
-  currentObjectLength = this.objectsLength.asObservable();
-
   selectedObjectName!: string;
 
   objectChanged = new Subject<Object[]>();
+
+  private objectsLength = new BehaviorSubject<Number>(0);
   
   createdObject!: {
     id: string,
@@ -45,10 +44,10 @@ export class ObjectsService implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.objectsLength.next(this.getObjectsLength());
+    this.setObjectsLength();
   }
 
-  public getStoragesApi(): Observable<Object[]> {
+  public getObjectsApi(): Observable<Object[]> {
     return this.http.get<Object[]>(`${this.apiBaseUrl}/objects`).pipe(
       tap((response: any[]) => {
         this.objectChanged.next([...response])
@@ -74,11 +73,11 @@ export class ObjectsService implements OnInit {
         this.http.post(`${this.apiBaseUrl}/objects`, this.createdObject).pipe(
           first(),
           tap(() => {
-            this.getStoragesApi().subscribe();
+            this.getObjectsApi().subscribe();
+            this.setObjectsLength();
           }),
         ).subscribe();
 
-        this.objectsLength.next(this.getObjectsLength());
         this.sharedService.openSnackBar('create');
         this.creatingForm.reset();
       }
@@ -100,7 +99,8 @@ export class ObjectsService implements OnInit {
         this.http.put(`${this.apiBaseUrl}/objects/${element.id}`, updatedForm.getRawValue()).pipe(
           first(),
           tap(() => {
-            this.getStoragesApi().subscribe();
+            this.getObjectsApi().subscribe();
+            this.setObjectsLength();
           }),
         ).subscribe();
         this.sharedService.openSnackBar('edit');
@@ -121,19 +121,33 @@ export class ObjectsService implements OnInit {
         this.http.delete(`${this.apiBaseUrl}/objects/${element.id}`).pipe(
           first(),
           tap(() => {
-            this.getStoragesApi().subscribe();
+            this.getObjectsApi().subscribe();
+            this.setObjectsLength();
           }),
         ).subscribe();
       }
     });
   }
 
-  getObjectsLength() {
-    let length = 0
-    // for (let i = 0; i < this.data.length; i++) {
-    //   length += parseInt(this.data[i].length);
-    // }
-    return length;
+  private setObjectsLength(): void {
+    this.getObjectsApi().pipe(
+      first(),
+      map((objects: Object[]) => {
+        let length = 0;
+        for (let object of objects) {
+          length += parseInt(object.length);
+        }
+        return length;
+      }),
+      tap(length => {
+        this.objectsLength.next(length);
+      }),
+    ).subscribe();
+  }
+
+  public getObjectsLength() {
+    this.setObjectsLength();
+    return this.objectsLength.asObservable();
   }
 
   initCreatingForm() {

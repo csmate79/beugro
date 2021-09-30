@@ -13,7 +13,7 @@ import { FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { first, tap } from 'rxjs/operators';
+import { first, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -24,13 +24,13 @@ export class StorageService implements OnInit {
   data!: Storage[];
  
   objectsLength!: number;
-  private storagesLength = new BehaviorSubject<number>(this.getStoragesLength());
-  currentStoragesLength = this.storagesLength.asObservable();
 
   storagesChanged = new Subject<Storage[]>();
 
   selectedStorageAddress!: string;
   creatingForm!: FormGroup;
+
+  private storagesLength = new Subject<Number>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -51,7 +51,7 @@ export class StorageService implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.objectsService.currentObjectLength.subscribe(length => this.objectsLength = length);
+    
   }
 
   public getStoragesApi(): Observable<Storage[]> {
@@ -81,10 +81,10 @@ export class StorageService implements OnInit {
           first(),
           tap(() => {
             this.getStoragesApi().subscribe();
+            this.setStoragesLength();
           }),
         ).subscribe();
 
-        this.storagesLength.next(this.getStoragesLength());
         this.creatingForm.reset();
         this.sharedService.openSnackBar('create');
       }
@@ -107,6 +107,7 @@ export class StorageService implements OnInit {
           first(),
           tap(() => {
             this.getStoragesApi().subscribe();
+            this.setStoragesLength();
           }),
         ).subscribe();
         this.sharedService.openSnackBar('edit');
@@ -116,7 +117,6 @@ export class StorageService implements OnInit {
   }
 
   public openDialogDelete(element: Element) {
-    console.log(element);
     const dialogRef = this.dialog.open(StorageListingDeleteDialogComponent, {
       width: '40vw',
       data: { }
@@ -130,18 +130,32 @@ export class StorageService implements OnInit {
           first(),
           tap(() => {
             this.getStoragesApi().subscribe();
+            this.setStoragesLength();
           }),
         ).subscribe();
       }
     });
   }
 
-  public getStoragesLength() {
-    let length = 0
-    for (let i = 0; i < this.data?.length; i++) {
-      length += parseInt(this.data[i].length);
-    };
-    return length;
+  public setStoragesLength(): void {
+    this.getStoragesApi().pipe(
+      first(),
+      map((storages: Storage[]) => {
+        let length = 0;
+        for (let storage of storages) {
+          length += parseInt(storage.length);
+        }
+        return length;
+      }),
+      tap(length => {
+        this.storagesLength.next(length);
+      }),
+    ).subscribe();
+  }
+
+  public getStoragesLength(): Observable<Number> {
+    this.setStoragesLength();
+    return this.storagesLength.asObservable();
   }
 
   public initCreatingForm() {

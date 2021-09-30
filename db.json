@@ -35,61 +35,37 @@
   ],
   "storages": [
     {
-      "id": "7lnWe",
-      "address": "z",
-      "length": "4",
-      "width": "4"
-    },
-    {
-      "id": "n9LhX",
-      "address": "zsixis",
-      "length": "2",
-      "width": "2"
-    },
-    {
-      "id": "F4IXr",
-      "address": "jjj",
-      "length": "2",
-      "width": "2"
-    },
-    {
-      "id": "e5orv",
-      "address": "kkkk",
-      "length": "3",
-      "width": "3"
-    },
-    {
-      "id": "BZwSz",
-      "address": "ff",
-      "length": "1",
-      "width": "1"
-    },
-    {
-      "id": "MViD7",
-      "address": "xxx",
-      "length": "2",
-      "width": "1"
-    },
-    {
-      "id": "1U2qQ",
-      "address": "iii",
-      "length": "1",
-      "width": "1"
-    },
-    {
-      "id": "smJx3",
+      "id": "rpN1d",
       "address": "asd",
+      "length": "5",
+      "width": "5"
+    },
+    {
+      "id": "3Uy8E",
+      "address": "sa",
       "length": "1",
+      "width": "5"
+    },
+    {
+      "id": "sGPln",
+      "address": "r",
+      "length": "4",
       "width": "1"
+    },
+    {
+      "id": "P2uNf",
+      "address": "w",
+      "length": "4",
+      "width": "2"
+    },
+    {
+      "id": "4pOaO",
+      "address": "w",
+      "length": "2",
+      "width": "2"
     }
   ],
   "objects": [
-    {
-      "id": "sad21",
-      "name": "asd",
-      "length": "5",
-      "date": "1998.04.21"
-    },
     {
       "id": "gas2a",
       "name": "dfg",
@@ -113,6 +89,18 @@
       "name": "sd",
       "length": "2",
       "date": "2021.09.29"
+    },
+    {
+      "id": "b8hfa",
+      "name": "s",
+      "length": "5",
+      "date": "2021.09.30"
+    },
+    {
+      "id": "2R6My",
+      "name": "w",
+      "length": "5",
+      "date": "2021.09.30"
     }
   ]
 }
