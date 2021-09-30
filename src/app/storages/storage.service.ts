@@ -1,14 +1,12 @@
-import { Injectable, OnInit, ViewChild } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Storage } from '../storages/storage.interface';
 import { StorageListingEditDialogComponent } from 'src/app/storages/storage-listing/storage-listing-edit-dialog/storage-listing-edit-dialog.component';
 import { StorageListingDeleteDialogComponent } from 'src/app/storages/storage-listing/storage-listing-delete-dialog/storage-listing-delete-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { StorageAddDialogComponent } from 'src/app/storages/storage-listing/storage-listing-add-dialog/storage-listing-add-dialog.component';
-import { ObjectsService } from '../objects/objects.service';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedService } from '../shared/shared.service';
-import { MatPaginator } from '@angular/material/paginator';
 import { FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -18,21 +16,19 @@ import { first, map, tap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class StorageService implements OnInit {
+export class StorageService {
   private apiBaseUrl = environment.apiBaseUrl;
   
-  data!: Storage[];
+  public data!: Storage[];
  
-  objectsLength!: number;
+  public objectsLength!: number;
 
-  storagesChanged = new Subject<Storage[]>();
+  public storagesChanged = new Subject<Storage[]>();
 
-  selectedStorageAddress!: string;
-  creatingForm!: FormGroup;
+  public selectedStorageAddress!: string;
+  public creatingForm!: FormGroup;
 
   private storagesLength = new Subject<Number>();
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   createdStorage!: {
     id: string, 
@@ -45,14 +41,9 @@ export class StorageService implements OnInit {
     private dialog: MatDialog,
     public snackBar: MatSnackBar,
     private sharedService: SharedService,
-    private objectsService: ObjectsService,
     private formBuilder: FormBuilder,
     private http: HttpClient
   ) { }
-
-  ngOnInit() {
-    
-  }
 
   public getStoragesApi(): Observable<Storage[]> {
     return this.http.get<Storage[]>(`${this.apiBaseUrl}/storages`).pipe(

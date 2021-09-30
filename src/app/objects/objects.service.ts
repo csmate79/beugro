@@ -1,10 +1,10 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ObjectListingEditDialogComponent } from 'src/app/objects/object-listing/object-listing-edit-dialog/object-listing-edit-dialog.component';
 import { Object } from './object.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedService } from '../shared/shared.service';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { formatDate } from '@angular/common';
@@ -17,16 +17,16 @@ import { first, map, tap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class ObjectsService implements OnInit{
+export class ObjectsService{
   public apiBaseUrl = environment.apiBaseUrl;
 
-  creatingForm!: FormGroup;
+  public creatingForm!: FormGroup;
 
-  selectedObjectName!: string;
+  public selectedObjectName!: string;
 
-  objectChanged = new Subject<Object[]>();
+  public objectChanged = new Subject<Object[]>();
 
-  private objectsLength = new BehaviorSubject<Number>(0);
+  private objectsLength = new Subject<Number>();
   
   createdObject!: {
     id: string,
@@ -43,10 +43,6 @@ export class ObjectsService implements OnInit{
     private http: HttpClient,
   ) {}
 
-  ngOnInit() {
-    this.setObjectsLength();
-  }
-
   public getObjectsApi(): Observable<Object[]> {
     return this.http.get<Object[]>(`${this.apiBaseUrl}/objects`).pipe(
       tap((response: any[]) => {
@@ -55,7 +51,7 @@ export class ObjectsService implements OnInit{
     );
   }
 
-  openDialogCreateNewObject() {
+  public openDialogCreateNewObject() {
     this.initCreatingForm();
     const dialogRef = this.dialog.open(ObjectAddDialogComponent, {
       width: '40vw',
@@ -84,7 +80,7 @@ export class ObjectsService implements OnInit{
     });
   }
 
-  openDialogEdit(element: Element, updatedForm: FormGroup) {
+  public openDialogEdit(element: Element, updatedForm: FormGroup) {
     const dialogRef = this.dialog.open(ObjectListingEditDialogComponent, {
       width: '40vw',
       data: { 
@@ -109,7 +105,7 @@ export class ObjectsService implements OnInit{
     });
   }
 
-  openDialogDelete(element: Element) {
+  public openDialogDelete(element: Element) {
     const dialogRef = this.dialog.open(ObjectListingDeleteDialogComponent, {
       width: '40vw',
       data: { }
@@ -150,7 +146,7 @@ export class ObjectsService implements OnInit{
     return this.objectsLength.asObservable();
   }
 
-  initCreatingForm() {
+  public initCreatingForm() {
     this.creatingForm = this.formBuilder.group({
       id: {value: makeid(), disabled: true},
       name: [null, [Validators.required, Validators.maxLength(50)]],
