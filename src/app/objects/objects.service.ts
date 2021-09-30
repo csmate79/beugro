@@ -12,7 +12,7 @@ import { ObjectAddDialogComponent } from './object-listing/object-listing-add-di
 import { ObjectListingDeleteDialogComponent } from './object-listing/object-listing-delete-dialog/object-listing-delete-dialog.component';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { first, map, tap } from 'rxjs/operators';
+import { first, map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -43,7 +43,7 @@ export class ObjectsService{
     private http: HttpClient,
   ) {}
 
-  public getObjectsApi(): Observable<Object[]> {
+  public getObjects(): Observable<Object[]> {
     return this.http.get<Object[]>(`${this.apiBaseUrl}/objects`).pipe(
       tap((response: any[]) => {
         this.objectChanged.next([...response])
@@ -68,8 +68,8 @@ export class ObjectsService{
 
         this.http.post(`${this.apiBaseUrl}/objects`, this.createdObject).pipe(
           first(),
+          switchMap(() => this.getObjects()),
           tap(() => {
-            this.getObjectsApi().subscribe();
             this.setObjectsLength();
           }),
         ).subscribe();
@@ -94,8 +94,8 @@ export class ObjectsService{
       if (result) {
         this.http.put(`${this.apiBaseUrl}/objects/${element.id}`, updatedForm.getRawValue()).pipe(
           first(),
+          switchMap(() => this.getObjects()),
           tap(() => {
-            this.getObjectsApi().subscribe();
             this.setObjectsLength();
           }),
         ).subscribe();
@@ -116,8 +116,8 @@ export class ObjectsService{
       if (result) {
         this.http.delete(`${this.apiBaseUrl}/objects/${element.id}`).pipe(
           first(),
+          switchMap(() => this.getObjects()),
           tap(() => {
-            this.getObjectsApi().subscribe();
             this.setObjectsLength();
           }),
         ).subscribe();
@@ -126,7 +126,7 @@ export class ObjectsService{
   }
 
   private setObjectsLength(): void {
-    this.getObjectsApi().pipe(
+    this.getObjects().pipe(
       first(),
       map((objects: Object[]) => {
         let length = 0;

@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { first, tap } from 'rxjs/operators';
 import { User } from '../auth/interfaces/user.interface';
 import { AuthService } from '../auth/services/auth.service';
@@ -13,7 +13,6 @@ export class HasPermissionDirective implements OnInit {
   private isHidden = true;
 
   constructor(
-    private element: ElementRef,
     private templateRef: TemplateRef<any>,
     private viewContainer: ViewContainerRef,
     private authService: AuthService

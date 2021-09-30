@@ -43,7 +43,7 @@ export class StorageListingComponent implements OnInit {
     this.initializeColumns();
     this.initForm();
   
-    this.storageService.getStoragesApi().pipe(
+    this.storageService.getStorages().pipe(
       tap((storages: Storage[]) => {
         this.storages = storages;
         this.dataSource = new MatTableDataSource(this.storages);

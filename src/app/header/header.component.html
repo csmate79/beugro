@@ -1,20 +1,21 @@
 <p>
     <mat-toolbar color="primary">
-      <span>Beugró</span>
-      <span class="example-spacer"></span>
-      <a 
+        <span>Beugró</span>
+        <span 
+        class="example-spacer"></span>
+        <a 
             mat-button
             routerLink="/objects" 
             [style.margin-right]="'12px'"
             routerLinkActive="active"
             [routerLinkActiveOptions]="{exact: true}">
-                Tárgyak
+            Tárgyak
         </a>
         <a 
             mat-button
             routerLink="/storages" 
             routerLinkActive="active">
-                Raktárak
+            Raktárak
         </a>
         <span class="example-spacer"></span>
         <button
@@ -28,7 +29,7 @@
             [matMenuTriggerFor]="menu"
             color="primary"
             style="background-color: darkorchid; padding: 0 15px; border-radius: 5px;">
-            {{ userName | async }}
+            {{ user.userName }}
         </button>
             <mat-menu #menu="matMenu">
                 <button 

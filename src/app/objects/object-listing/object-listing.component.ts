@@ -43,7 +43,7 @@ export class ObjectListingComponent implements OnInit {
     this.initializeColumns();
     this.initForm();
     
-    this.objectService.getObjectsApi().pipe(
+    this.objectService.getObjects().pipe(
       tap((objects: Object[]) => {
         this.objects = objects;
         this.dataSource = new MatTableDataSource(this.objects);

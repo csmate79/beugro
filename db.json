@@ -5,9 +5,9 @@
       "email": "asd@asd.com",
       "password": "a",
       "permission": [
-        "Permission.ADMIN",
-        "Permission.SUPERADMIN",
-        "Permission.GROUP_LEADER"
+        "ADMIN",
+        "SUPERADMIN",
+        "GROUP_LEADER"
       ],
       "sessionToken": "asd2gawe2",
       "sessionTokenExpirationDate": "2021.05.21."
@@ -17,7 +17,7 @@
       "email": "b@b.com",
       "password": "b",
       "permission": [
-        "Permission.USER"
+        "USER"
       ],
       "sessionToken": "asd2dda2",
       "sessionTokenExpirationDate": "2021.05.21."
@@ -27,7 +27,7 @@
       "email": "c@c.com",
       "password": "c",
       "permission": [
-        "Permission.SUPERADMIN"
+        "SUPERADMIN"
       ],
       "sessionToken": "asd2d231",
       "sessionTokenExpirationDate": "2021.05.21."
@@ -43,7 +43,7 @@
     {
       "id": "3Uy8E",
       "address": "sa",
-      "length": "1",
+      "length": "5",
       "width": "5"
     },
     {
@@ -61,6 +61,18 @@
     {
       "id": "4pOaO",
       "address": "w",
+      "length": "2",
+      "width": "2"
+    },
+    {
+      "id": "JqARD",
+      "address": "asda",
+      "length": "5",
+      "width": "5"
+    },
+    {
+      "id": "006Io",
+      "address": "s",
       "length": "2",
       "width": "2"
     }
@@ -100,6 +112,18 @@
       "id": "2R6My",
       "name": "w",
       "length": "5",
+      "date": "2021.09.30"
+    },
+    {
+      "id": "m1hZM",
+      "name": "asd",
+      "length": "4",
+      "date": "2021.09.30"
+    },
+    {
+      "id": "i8uRY",
+      "name": "f",
+      "length": "2",
       "date": "2021.09.30"
     }
   ]

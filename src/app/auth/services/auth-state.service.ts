@@ -12,7 +12,6 @@ import { tap } from 'rxjs/operators';
 export class AuthStateService {
   
   private user = new BehaviorSubject<User | null>(null);
-  private userName = new BehaviorSubject<string | null>(null);
 
   constructor(
     @Inject(LOCAL_STORAGE) private storage: StorageService,
@@ -24,7 +23,6 @@ export class AuthStateService {
    */
   public setUser(user: User): void {
     this.user.next(user);
-    this.userName.next(user.userName);
     this.storage.set('user', user);
   }
 
@@ -37,9 +35,6 @@ export class AuthStateService {
     return this.user.asObservable();
   }
   
-  public getUsername(): Observable<string | null> {
-    return this.userName.asObservable();
-  }
 
   /**
    * Visszaállítja az alkalmazás bejelentkezett állapotát
@@ -50,7 +45,6 @@ export class AuthStateService {
         const user = this.storage.get('user');
         if (user) {
           this.user.next(user);
-          this.userName.next(user.userName);
         }
       }),
     ) as any;

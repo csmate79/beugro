@@ -4,6 +4,7 @@ import { MatTableDataSource } from "@angular/material/table";
 import { MatPaginator } from "@angular/material/paginator";
 import { AuthStateService } from '../auth/services/auth-state.service';
 import { User } from '../auth/interfaces/user.interface';
+import { Permission } from '../auth/enums/permission.enum';
 
 @Component({
   selector: 'custom-table',
@@ -16,6 +17,8 @@ export class TableComponent implements OnInit, AfterViewInit {
   public tableDataSource = new MatTableDataSource<TableColumn>([]);
   public displayedColumns!: string[];
   public currentUser!: User | null;
+
+  public permissions = [Permission.ADMIN, Permission.GROUP_LEADER, Permission.SUPERADMIN];
 
   @ViewChild(MatPaginator, {static: false}) matPaginator!: MatPaginator;
 

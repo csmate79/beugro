@@ -11,7 +11,7 @@ import { FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { first, map, tap } from 'rxjs/operators';
+import { first, map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +45,7 @@ export class StorageService {
     private http: HttpClient
   ) { }
 
-  public getStoragesApi(): Observable<Storage[]> {
+  public getStorages(): Observable<Storage[]> {
     return this.http.get<Storage[]>(`${this.apiBaseUrl}/storages`).pipe(
       tap((response: any[]) => {
         this.storagesChanged.next([...response])
@@ -70,8 +70,8 @@ export class StorageService {
 
         this.http.post(`${this.apiBaseUrl}/storages`, this.createdStorage).pipe(
           first(),
+          switchMap(() => this.getStorages()),
           tap(() => {
-            this.getStoragesApi().subscribe();
             this.setStoragesLength();
           }),
         ).subscribe();
@@ -96,8 +96,8 @@ export class StorageService {
       if (result) {
         this.http.put(`${this.apiBaseUrl}/storages/${element.id}`, updatedForm.getRawValue()).pipe(
           first(),
+          switchMap(() => this.getStorages()),
           tap(() => {
-            this.getStoragesApi().subscribe();
             this.setStoragesLength();
           }),
         ).subscribe();
@@ -119,8 +119,8 @@ export class StorageService {
       if (result) {
         this.http.delete(`${this.apiBaseUrl}/storages/${element.id}`).pipe(
           first(),
+          switchMap(() => this.getStorages()),
           tap(() => {
-            this.getStoragesApi().subscribe();
             this.setStoragesLength();
           }),
         ).subscribe();
@@ -129,7 +129,7 @@ export class StorageService {
   }
 
   public setStoragesLength(): void {
-    this.getStoragesApi().pipe(
+    this.getStorages().pipe(
       first(),
       map((storages: Storage[]) => {
         let length = 0;
